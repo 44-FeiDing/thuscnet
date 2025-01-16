@@ -19,9 +19,10 @@ namespace PCAP
         uint32_t snaplen;// 允许的最大包长度，始终为 262144
         uint32_t network;// 数据类型，本次学习题中始终为 1 （以太网）
     public:
+        int n;
         friend std::istream & operator>>(std::istream & in, Pcap_hdr & data);
         friend std::ostream & operator<<(std::ostream & out, Pcap_hdr data);
-    }__attribute__ ((packed));
+    };
 
     class Pcaprec_hdr
     {
@@ -32,6 +33,7 @@ namespace PCAP
         uint32_t incl_len;// 该片段的存储长度
         uint32_t orig_len;// 该片段实际的长度
     public:
+        int lenth() const;
         friend std::istream & operator>>(std::istream & in, Pcaprec_hdr & data);
         friend std::ostream & operator<<(std::ostream & out, Pcaprec_hdr data);
     }__attribute__ ((packed));
@@ -44,7 +46,7 @@ namespace PCAP
     public:
         int lenth() const;
         friend std::istream & operator>>(std::istream & in, Pcaprec & data);
-        friend std::ostream & operator<<(std::ostream & out, Pcaprec data);
+        friend std::ostream & operator<<(std::ostream & out, const Pcaprec & data);
     };
     class Pcap
     {
@@ -53,8 +55,8 @@ namespace PCAP
         std::vector<Pcaprec> data;
     public:
         void fuck_pcaprec_longer_than_1000();
-        friend std::istream & operator>>(std::istream & in, Pcaprec & data);
-        friend std::ostream & operator<<(std::ostream & out, Pcaprec data);
+        friend std::istream & operator>>(std::istream & in, Pcap & data);
+        friend std::ostream & operator<<(std::ostream & out, const Pcap & data);
     };
 }
 #endif

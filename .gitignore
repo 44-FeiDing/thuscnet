@@ -1,2 +1,2 @@
-include/*.swp
 *.swp
+*.o
