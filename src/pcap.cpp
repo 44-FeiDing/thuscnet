@@ -90,6 +90,7 @@ istream & PCAP::operator>>(istream & in, Pcap & data)
         in >> tmp;
         data.data.push_back(tmp);
     }
+    data.data.pop_back();
     return in;
 }
 
