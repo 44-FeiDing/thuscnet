@@ -34,6 +34,7 @@ namespace PCAP
         uint32_t orig_len;// 该片段实际的长度
     public:
         int lenth() const;
+        uint64_t time() const;
         friend istream & operator>>(istream & in, Pcaprec_hdr & data);
         friend ostream & operator<<(ostream & out, Pcaprec_hdr data);
     }__attribute__ ((packed));
@@ -47,6 +48,7 @@ namespace PCAP
         int lenth() const;
         friend istream & operator>>(istream & in, Pcaprec & data);
         friend ostream & operator<<(ostream & out, const Pcaprec & data);
+        friend bool operator<(const Pcaprec, const Pcaprec);
     }__attribute__ ((packed));
     class Pcap
     {
@@ -54,7 +56,7 @@ namespace PCAP
         Pcap_hdr header;
         std::vector<Pcaprec> data;
     public:
-        void fuck_pcaprec_longer_than_1000();
+        Pcap fuck_pcaprec_longer_than_1000();
         friend istream & operator>>(istream & in, Pcap & data);
         friend ostream & operator<<(ostream & out, const Pcap & data);
     }__attribute__ ((packed));

@@ -1,9 +1,12 @@
 #include "pcap.hpp"
+#include <algorithm>
+#include <cstdint>
 #include <cstring>
 #include <iostream>
 #include <arpa/inet.h>
 #include <netinet/in.h>
 #include <ostream>
+#include <vector>
 using std::istream;
 using std::ostream;
 
@@ -100,24 +103,23 @@ ostream & PCAP::operator<<(ostream & out, const Pcap & data)
     return out;
 }
 
-void PCAP::Pcap::fuck_pcaprec_longer_than_1000()
+PCAP::Pcap PCAP::Pcap::fuck_pcaprec_longer_than_1000()
 {
-    std::cout << data.size();
-    bool *b = new bool[data.size()];
-    memset(b, 0, data.size() * sizeof(bool));
-    for (int i = 0; i < data.size(); i++)
-    {
-        if (data[i].lenth() > 1000)
-            b[i] = 1;
-    }
-    unsigned l = 0, r = 0;
-    while (r < data.size())
-    {
-        while (r < data.size() && b[r])
-            r++;
-        data[l] = data[r];
-        l++;
-        r++;
-    }
-    delete [] b;
+    Pcap newpcap;
+    newpcap.header = header;
+    for (auto i:data)
+        if (i.lenth() <= 1000)
+            newpcap.data.push_back(i);
+    std::sort(newpcap.data.begin(), newpcap.data.end());
+    return newpcap;
+}
+
+uint64_t PCAP::Pcaprec_hdr::time() const
+{
+    return tsec*(uint64_t)1e6 + ts_usec;
+}
+
+bool PCAP::operator<(const PCAP::Pcaprec a, const PCAP::Pcaprec b)
+{
+    return a.header.time() < b.header.time();
 }

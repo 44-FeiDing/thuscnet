@@ -3,11 +3,11 @@
 #include <cmath>
 
 using namespace std;
+using namespace PCAP;
 
 int main()
 {
-    PCAP::Pcap rec;
+    Pcap rec;
     cin >> rec;
-    rec.fuck_pcaprec_longer_than_1000();
-    cout << rec;
+    cout << rec.fuck_pcaprec_longer_than_1000();
 }

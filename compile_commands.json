@@ -1,13 +1,13 @@
 [
   {
     "directory": "/home/feiding/src/thuscnet/build",
-    "command": "ccache c++ -Ithuscnet.p -I. -I.. -I../include -fdiagnostics-color=always -D_GLIBCXX_ASSERTIONS=1 -D_FILE_OFFSET_BITS=64 -Wall -Winvalid-pch -Wextra -Wpedantic -std=c++14 -O0 -g -MD -MQ thuscnet.p/src_pcap.cpp.o -MF thuscnet.p/src_pcap.cpp.o.d -o thuscnet.p/src_pcap.cpp.o -c ../src/pcap.cpp",
+    "command": "c++ -Ithuscnet.p -I. -I.. -I../include -fdiagnostics-color=always -D_GLIBCXX_ASSERTIONS=1 -D_FILE_OFFSET_BITS=64 -Wall -Winvalid-pch -Wextra -Wpedantic -std=c++14 -O0 -g -MD -MQ thuscnet.p/src_pcap.cpp.o -MF thuscnet.p/src_pcap.cpp.o.d -o thuscnet.p/src_pcap.cpp.o -c ../src/pcap.cpp",
     "file": "../src/pcap.cpp",
     "output": "thuscnet.p/src_pcap.cpp.o"
   },
   {
     "directory": "/home/feiding/src/thuscnet/build",
-    "command": "ccache c++ -Ithuscnet.p -I. -I.. -I../include -fdiagnostics-color=always -D_GLIBCXX_ASSERTIONS=1 -D_FILE_OFFSET_BITS=64 -Wall -Winvalid-pch -Wextra -Wpedantic -std=c++14 -O0 -g -MD -MQ thuscnet.p/src_main.cpp.o -MF thuscnet.p/src_main.cpp.o.d -o thuscnet.p/src_main.cpp.o -c ../src/main.cpp",
+    "command": "c++ -Ithuscnet.p -I. -I.. -I../include -fdiagnostics-color=always -D_GLIBCXX_ASSERTIONS=1 -D_FILE_OFFSET_BITS=64 -Wall -Winvalid-pch -Wextra -Wpedantic -std=c++14 -O0 -g -MD -MQ thuscnet.p/src_main.cpp.o -MF thuscnet.p/src_main.cpp.o.d -o thuscnet.p/src_main.cpp.o -c ../src/main.cpp",
     "file": "../src/main.cpp",
     "output": "thuscnet.p/src_main.cpp.o"
   }
