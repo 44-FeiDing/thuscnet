@@ -19,7 +19,6 @@ namespace PCAP
         uint32_t snaplen;// 允许的最大包长度，始终为 262144
         uint32_t network;// 数据类型，本次学习题中始终为 1 （以太网）
     public:
-        int n;
         friend istream & operator>>(istream & in, Pcap_hdr & data);
         friend ostream & operator<<(ostream & out, Pcap_hdr data);
     }__attribute__ ((packed));
@@ -49,7 +48,7 @@ namespace PCAP
         friend istream & operator>>(istream & in, Pcaprec & data);
         friend ostream & operator<<(ostream & out, const Pcaprec & data);
         friend bool operator<(const Pcaprec, const Pcaprec);
-    }__attribute__ ((packed));
+    };
     class Pcap
     {
     private:
@@ -59,6 +58,6 @@ namespace PCAP
         Pcap fuck_pcaprec_longer_than_1000();
         friend istream & operator>>(istream & in, Pcap & data);
         friend ostream & operator<<(ostream & out, const Pcap & data);
-    }__attribute__ ((packed));
+    };
 }
 #endif
