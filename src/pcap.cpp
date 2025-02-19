@@ -76,6 +76,8 @@ namespace PCAP {
     istream & operator>>(istream & in, Pcaprec & data)
     {
         in >> data.header;
+        if (data.lenth() > 262144)
+            return in;
         data.data.resize(data.lenth());
         in.read((char*)data.data.data(), data.lenth());
         return in;
@@ -91,7 +93,7 @@ namespace PCAP {
     istream & operator>>(istream & in, Pcap & data)
     {
         in >> data.header;
-        while (!(in.eof()))
+        while (!in.eof())
         {
             Pcaprec tmp;
             in >> tmp;
@@ -119,7 +121,7 @@ namespace PCAP {
             //if (i.lenth() <= 1000)
                 newpcap.data.push_back(i);
         std::sort(newpcap.data.begin(), newpcap.data.end());
-        std::cerr << data.size();
+        //std::cerr << data.size();
         return newpcap;
     }
 
