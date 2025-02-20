@@ -38,7 +38,7 @@ namespace PCAP {
         return out;
     }
 
-    int Pcaprec_hdr::lenth() const
+    uint32_t Pcaprec_hdr::lenth() const
     {
         return incl_len;
     }
@@ -68,7 +68,7 @@ namespace PCAP {
         return out;
     }
 
-    int Pcaprec::lenth() const
+    uint32_t Pcaprec::lenth() const
     {
         return header.lenth();
     }
@@ -76,7 +76,7 @@ namespace PCAP {
     istream & operator>>(istream & in, Pcaprec & data)
     {
         in >> data.header;
-        if (data.lenth() > 262144)
+        if (data.lenth() > (uint32_t)262144)
             return in;
         data.data.resize(data.lenth());
         in.read((char*)data.data.data(), data.lenth());
@@ -118,7 +118,7 @@ namespace PCAP {
         Pcap newpcap;
         newpcap.header = header;
         for (auto i:data)
-            //if (i.lenth() <= 1000)
+            if (i.lenth() <= 1000)
                 newpcap.data.push_back(i);
         std::sort(newpcap.data.begin(), newpcap.data.end());
         //std::cerr << data.size();

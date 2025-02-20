@@ -32,7 +32,7 @@ namespace PCAP
         uint32_t incl_len;// 该片段的存储长度
         uint32_t orig_len;// 该片段实际的长度
     public:
-        int lenth() const;
+        uint32_t lenth() const;
         uint64_t time() const;
         friend istream & operator>>(istream & in, Pcaprec_hdr & data);
         friend ostream & operator<<(ostream & out, Pcaprec_hdr data);
@@ -44,7 +44,7 @@ namespace PCAP
         Pcaprec_hdr header;
         std::vector<uint8_t> data;
     public:
-        int lenth() const;
+        uint32_t lenth() const;
         friend istream & operator>>(istream & in, Pcaprec & data);
         friend ostream & operator<<(ostream & out, const Pcaprec & data);
         friend bool operator<(const Pcaprec, const Pcaprec);
