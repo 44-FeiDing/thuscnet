@@ -46,11 +46,6 @@ namespace PCAP {
     istream & operator>>(istream & in, Pcaprec_hdr & data)
     {
         in.read((char*)&data, sizeof(Pcaprec_hdr));
-        //std::cerr.write((char*)&data, sizeof(Pcaprec_hdr));
-        //std::cerr << "\0";
-        //std::cerr << "\0";
-        //std::cerr << "\0";
-        //std::cerr << "\0";
         data.incl_len = ntohl(data.incl_len);
         data.orig_len = ntohl(data.orig_len);
         data.tsec = ntohl(data.tsec);
@@ -111,18 +106,6 @@ namespace PCAP {
             out << i;
         }
         return out;
-    }
-
-    Pcap Pcap::fuck_pcaprec_longer_than_1000()
-    {
-        Pcap newpcap;
-        newpcap.header = header;
-        for (auto i:data)
-            if (i.lenth() <= 1000)
-                newpcap.data.push_back(i);
-        std::sort(newpcap.data.begin(), newpcap.data.end());
-        //std::cerr << data.size();
-        return newpcap;
     }
 
     uint64_t Pcaprec_hdr::time() const

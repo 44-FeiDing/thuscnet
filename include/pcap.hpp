@@ -44,6 +44,7 @@ namespace PCAP
         Pcaprec_hdr header;
         std::vector<uint8_t> data;
     public:
+        bool verify() const;
         uint32_t lenth() const;
         friend istream & operator>>(istream & in, Pcaprec & data);
         friend ostream & operator<<(ostream & out, const Pcaprec & data);
@@ -55,7 +56,6 @@ namespace PCAP
         Pcap_hdr header;
         std::vector<Pcaprec> data;
     public:
-        Pcap fuck_pcaprec_longer_than_1000();
         friend istream & operator>>(istream & in, Pcap & data);
         friend ostream & operator<<(ostream & out, const Pcap & data);
     };
