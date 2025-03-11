@@ -1,6 +1,4 @@
 #include "pcap.hpp"
-#include <algorithm>
-#include <cstdint>
 #include <cstring>
 #include <iostream>
 #include <arpa/inet.h>
