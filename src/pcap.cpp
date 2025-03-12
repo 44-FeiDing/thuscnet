@@ -1,4 +1,5 @@
 #include "pcap.hpp"
+#include <cstdint>
 #include <cstring>
 #include <iostream>
 #include <arpa/inet.h>
@@ -81,6 +82,14 @@ namespace PCAP {
         out << data.header;
         out.write((char*)data.data.data(), data.lenth());
         return out;
+    }
+
+    std::vector<std::vector<uint8_t>> Pcap::get_data() const
+    {
+        std::vector<std::vector<uint8_t>> res;
+        for (auto &i : data)
+            res.push_back(i.get_data());
+        return res;
     }
 
     istream & operator>>(istream & in, Pcap & data)

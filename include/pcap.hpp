@@ -44,7 +44,7 @@ namespace PCAP
         Pcaprec_hdr header;
         std::vector<uint8_t> data;
     public:
-        bool verify() const;
+        std::vector<uint8_t>  get_data() const {return data;}
         uint32_t lenth() const;
         friend istream & operator>>(istream & in, Pcaprec & data);
         friend ostream & operator<<(ostream & out, const Pcaprec & data);
@@ -56,6 +56,7 @@ namespace PCAP
         Pcap_hdr header;
         std::vector<Pcaprec> data;
     public:
+        std::vector<std::vector<uint8_t>> get_data() const;
         friend istream & operator>>(istream & in, Pcap & data);
         friend ostream & operator<<(ostream & out, const Pcap & data);
     };
