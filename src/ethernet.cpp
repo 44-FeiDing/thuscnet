@@ -1,7 +1,9 @@
 #include "ethernet.hpp"
+#include "utilities.hpp"
 #include <algorithm>
 #include <cstdint>
 #include <iostream>
+#include <netinet/in.h>
 #include <vector>
 
 namespace ETHERNET
@@ -18,12 +20,36 @@ namespace ETHERNET
             std::cerr << "Source data too small when construct ethernet ";
             return;
         }
+        ether_type = ntohs(ether_type);
         std::copy(src.begin()[14], src.end()[-4], data);
     }
 
     bool Ethernet::verify()
     {
-        //
-        return 0;
+        std::vector<uint8_t> tmp;
+        static const uint64_t G = 0b100000100110000010001110110110111;
+
+        tmp.insert(tmp.end(), dest_mac.begin(), dest_mac.end());
+        tmp.insert(tmp.end(), src_mac.begin(), src_mac.end());
+
+        tmp.push_back(ntohs(ether_type) >> 8);
+        tmp.push_back(ether_type >> 8);
+
+        tmp.insert(tmp.end(), data.begin(), data.end());
+
+        tmp.push_back((uint8_t)0);
+        tmp.push_back((uint8_t)0);
+        tmp.push_back((uint8_t)0);
+        tmp.push_back((uint8_t)0);
+
+        for (auto &i : tmp)
+            i = std::bit_reverse(i);
+        for (int i = 0; i < 4; i++)
+            tmp[i] = (~tmp[i]);
+        
+        for (int i = 0; i < tmp.size() - 8; i++)
+        {
+            if (tmp)
+        }
     }
 }

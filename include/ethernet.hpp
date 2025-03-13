@@ -2,11 +2,7 @@
 #define ETHERNET_HPP_
 #include <array>
 #include <cstdint>
-#include <istream>
-#include <ostream>
 #include <vector>
-using std::istream;
-using std::ostream;
 namespace ETHERNET {
     class Ethernet
     {
@@ -19,6 +15,6 @@ namespace ETHERNET {
         public:
             Ethernet(const std::vector<uint8_t> &);
             bool verify();
-    }__attribute__((packed));
+    };
 }
 #endif
