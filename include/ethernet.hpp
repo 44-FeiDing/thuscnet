@@ -4,7 +4,7 @@
 #include <cstdint>
 #include <vector>
 namespace ETHERNET {
-    class Ethernet
+    class Ethernet_frame
     {
         private:
             std::array<uint8_t, 6> dest_mac;
@@ -13,7 +13,7 @@ namespace ETHERNET {
             std::vector<uint8_t> data;
             std::array<uint8_t, 4> fcs;
         public:
-            Ethernet(const std::vector<uint8_t> &);
+            Ethernet_frame(const std::vector<uint8_t> &);
             bool verify();
     };
 }
