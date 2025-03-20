@@ -22,20 +22,19 @@ namespace ETHERNET
             std::cerr << "Source data too small when construct ethernet ";
             return;
         }
-        ether_type = ntohs(ether_type);
     }
 
     bool Ethernet_frame::verify()
     {
         std::vector<uint8_t> tmp;
         std::array<uint8_t, 4> res;
-        static const uint64_t G = 0b100000100110000010001110110110111u;
+        static const uint64_t G = 0b100000100110000010001110110110111u; // NOTE: G has 33 bits!
 
         tmp.insert(tmp.end(), dest_mac.begin(), dest_mac.end());
         tmp.insert(tmp.end(), src_mac.begin(), src_mac.end());
 
-        tmp.push_back(ntohs(ether_type) >> 8);
         tmp.push_back(ether_type >> 8);
+        tmp.push_back(ntohs(ether_type) >> 8);
 
         tmp.insert(tmp.end(), data.begin(), data.end());
 
@@ -49,18 +48,18 @@ namespace ETHERNET
         for (int i = 0; i < 4; i++)
             tmp[i] = (~tmp[i]);
         
-        for (size_t i = 0; i <= tmp.size() - 4; i++)
+        for (size_t i = 0; i <= tmp.size() - 5; i++)
         {
             for (int j = 0; j < 8; j++)
             {
-                if (i == tmp.size() - 4 && j > 1)
-                    break;
-                tmp[i] = (tmp[i] ^ (G >> (24 + j)));
-                tmp[i + 1] = (tmp[i + 1] ^ (G >> ((16 + j) & 0xffu)));
-                tmp[i + 2] = (tmp[i + 2] ^ (G >> ((8 + j) & 0xffu)));
-                tmp[i + 3] = (tmp[i + 3] ^ (G >> (j & 0xffu)));
-                if (j > 0)
-                    tmp[i + 4] = (tmp[i + 4] ^ (G << (8 - j)));
+                if (tmp[i] >> (7 - j) & 1)
+                {
+                    tmp[i] ^= G >> (25 + j);
+                    tmp[i + 1] ^= G >> (17 + j);
+                    tmp[i + 2] ^= G >> (9 + j);
+                    tmp[i + 3] ^= G >> (1 + j);
+                    tmp[i + 4] ^= G << (7 - j);
+                }
             }
         }
         for (int i = 0; i < 4; i++)

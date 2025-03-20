@@ -1,6 +1,9 @@
 #include "pcap.hpp"
 #include "ethernet.hpp"
 #include <iostream>
+#include <fstream>
+
+std::ifstream fin("test/1.in");
 
 int main()
 {
@@ -8,7 +11,7 @@ int main()
     using namespace PCAP;
     using namespace ETHERNET;
     Pcap data;
-    cin >> data;
+    fin >> data;
     auto recs = data.get_data();
     for (auto &i : recs) {
         Ethernet_frame frame(i);
