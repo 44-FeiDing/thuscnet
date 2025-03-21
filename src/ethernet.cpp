@@ -63,7 +63,10 @@ namespace ETHERNET
             }
         }
         for (int i = 0; i < 4; i++)
+        {
             res[i] = std::bit_reverse(tmp.rbegin()[3 - i]);
+            res[i] = ~res[i];
+        }
         return res == fcs;
     }
 }
