@@ -26,6 +26,7 @@ namespace ip
         public:
         Ipgroup_hdr(std::vector<uint8_t>);
         uint16_t calculate_checksum();
+        bool verify();
     };
 }
 

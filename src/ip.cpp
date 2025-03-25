@@ -22,8 +22,23 @@ namespace ip
         {
             ;
         }
-    Ipgroup_hdr::calculate_checksum()
+    uint16_t Ipgroup_hdr::calculate_checksum()
     {
-
+        uint32_t sum = 0;
+        uint16_t *ptr = (uint16_t *)this;
+        for (int i = 0; i < ihl * 2; i++)
+        {
+            sum += ptr[i];
+        }
+        while (sum >> 16)
+        {
+            sum = (sum & 0xffff) + (sum >> 16);
+        }
+        checksum = ~sum;
+        return checksum;
+    }
+    bool Ipgroup_hdr::verify()
+    {
+        return calculate_checksum() == checksum;
     }
 }
