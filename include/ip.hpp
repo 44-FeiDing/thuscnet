@@ -21,9 +21,11 @@ namespace ip
         uint8_t protocal;
         uint16_t checksum;
         std::array<uint8_t, 4> src_ip, dest_ip;
+        std::vector<uint8_t> options;
 
         public:
         Ipgroup_hdr(std::vector<uint8_t>);
+        uint16_t calculate_checksum();
     };
 }
 

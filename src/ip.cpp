@@ -16,6 +16,14 @@ namespace ip
         ttl(src[8]),
         protocal(src[9]),
         checksum((src[10] << 8) + src[11]),
-        dest_ip{src[12], src[13], src[14], src[15]},
-        dest_ip{src[16], src[17]}// to be continue
+        src_ip{src[12], src[13], src[14], src[15]},
+        dest_ip{src[16], src[17], src[18], src[19]},
+        options(src.begin() + 20, src.begin() + ihl * 4)
+        {
+            ;
+        }
+    Ipgroup_hdr::calculate_checksum()
+    {
+
+    }
 }

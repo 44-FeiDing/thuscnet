@@ -14,6 +14,7 @@ namespace ETHERNET {
             std::array<uint8_t, 4> fcs;
         public:
             Ethernet_frame(const std::vector<uint8_t> &);
+            std::array<uint8_t, 4> calculate_fcs();
             bool verify();
     };
 }

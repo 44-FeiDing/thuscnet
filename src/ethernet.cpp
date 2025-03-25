@@ -24,7 +24,7 @@ namespace ETHERNET
         }
     }
 
-    bool Ethernet_frame::verify()
+    std::array<uint8_t, 4> Ethernet_frame::calculate_fcs()
     {
         std::vector<uint8_t> tmp;
         std::array<uint8_t, 4> res;
@@ -67,6 +67,11 @@ namespace ETHERNET
             res[i] = std::bit_reverse(tmp.rbegin()[3 - i]);
             res[i] = ~res[i];
         }
-        return res == fcs;
+        return res;
+    }
+
+    bool Ethernet_frame::verify()
+    {
+        return this->calculate_fcs() == fcs;
     }
 }
