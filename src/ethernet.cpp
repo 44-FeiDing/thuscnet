@@ -74,4 +74,12 @@ namespace ETHERNET
     {
         return this->calculate_fcs() == fcs;
     }
+    std::vector<uint8_t> Ethernet_frame::get_data()
+    {
+        return data;
+    }
+    uint16_t Ethernet_frame::get_type()
+    {
+        return ether_type;
+    }
 }

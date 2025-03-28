@@ -5,7 +5,7 @@
 #include <cstdint>
 #include <vector>
 
-namespace ip
+namespace IP
 {
     class Ipgroup_hdr
     {

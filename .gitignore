@@ -6,3 +6,6 @@ builddir/
 compile_commands.json
 test/
 .vscode/
+final.cpp
+final
+*.swo
