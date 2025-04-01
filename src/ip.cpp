@@ -18,7 +18,6 @@ namespace IP
         checksum((src[10] << 8) + src[11]),
         src_ip{src[12], src[13], src[14], src[15]},
         dest_ip{src[16], src[17], src[18], src[19]}
-        // options(src.begin() + 20, src.begin() + ihl * 4)
         {
             if (ihl > 5)
             {
@@ -61,16 +60,16 @@ namespace IP
             src.push_back(i);
         }
 
-        uint16_t sum = 0;
-        for (size_t i = 0; i < ihl * 4; i += 2)
+        uint32_t sum = 0;
+        for (size_t i = 0; i < src.size(); i += 2)
         {
             sum += (src[i] << 8) + src[i + 1];
+            while (sum > 0xffffu)
+            {
+                sum = (sum & 0xffffu) + (sum >> 16);
+            }
         }
-        while (sum >> 16)
-        {
-            sum = (sum & 0xffff) + (sum >> 16);
-        }
-        return ~sum;
+        return (~sum) & 0xffffu;
     }
     bool Ipgroup_hdr::verify()
     {

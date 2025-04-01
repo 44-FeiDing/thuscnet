@@ -14,10 +14,11 @@ namespace ETHERNET {
             std::array<uint8_t, 4> fcs;
         public:
             Ethernet_frame(const std::vector<uint8_t> &);
-            std::array<uint8_t, 4> calculate_fcs();
-            bool verify();
-            std::vector<uint8_t> get_data();
-            uint16_t get_type();
+            uint64_t query_check_byte(uint8_t) const;
+            std::array<uint8_t, 4> calculate_fcs() const;
+            bool verify() const;
+            std::vector<uint8_t> get_data() const;
+            uint16_t get_type() const;
     };
 }
 #endif

@@ -1,6 +1,6 @@
 *.swp
 *.o
-builddir/
+build/
 .cache/
 *~
 compile_commands.json

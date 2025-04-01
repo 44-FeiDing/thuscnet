@@ -24,20 +24,35 @@ namespace ETHERNET
         }
     }
 
-    std::array<uint8_t, 4> Ethernet_frame::calculate_fcs()
+    uint64_t Ethernet_frame::query_check_byte(uint8_t x) const
+    {
+        static std::array<uint64_t, 256> mem{0};
+        static const uint64_t G = 0b100000100110000010001110110110111u; // NOTE: G has 33 bits!
+        if (mem[x])
+            return mem[x];
+        if (x == 0)
+            return 0;
+        auto y = x;
+        for (size_t i = 7; i < 8; i--)
+        {
+            if (x >> i & 1) {
+                x ^= (G >> 32 << i);
+                mem[y] ^= (G << i);
+            }
+        }
+        return mem[y];
+    }
+
+    std::array<uint8_t, 4> Ethernet_frame::calculate_fcs() const
     {
         std::vector<uint8_t> tmp;
         std::array<uint8_t, 4> res;
-        static const uint64_t G = 0b100000100110000010001110110110111u; // NOTE: G has 33 bits!
 
         tmp.insert(tmp.end(), dest_mac.begin(), dest_mac.end());
         tmp.insert(tmp.end(), src_mac.begin(), src_mac.end());
-
         tmp.push_back(ether_type >> 8);
         tmp.push_back(ntohs(ether_type) >> 8);
-
         tmp.insert(tmp.end(), data.begin(), data.end());
-
         tmp.push_back((uint8_t)0);
         tmp.push_back((uint8_t)0);
         tmp.push_back((uint8_t)0);
@@ -45,24 +60,18 @@ namespace ETHERNET
 
         for (auto &i : tmp)
             i = std::bit_reverse((uint8_t)i);
-        for (int i = 0; i < 4; i++)
+        for (size_t i = 0; i < 4; i++)
             tmp[i] = (~tmp[i]);
-        
-        for (size_t i = 0; i <= tmp.size() - 5; i++)
-        {
-            for (int j = 0; j < 8; j++)
-            {
-                if (tmp[i] >> (7 - j) & 1)
-                {
-                    tmp[i] ^= G >> (25 + j);
-                    tmp[i + 1] ^= G >> (17 + j);
-                    tmp[i + 2] ^= G >> (9 + j);
-                    tmp[i + 3] ^= G >> (1 + j);
-                    tmp[i + 4] ^= G << (7 - j);
-                }
-            }
-        }
-        for (int i = 0; i < 4; i++)
+        for (size_t i = 4; i < tmp.size(); i++) {
+            
+            uint64_t g = query_check_byte(tmp[i - 4]);
+            tmp[i - 4] ^= ( g >> 32 );
+            tmp[i - 3] ^= (g >> 24);
+            tmp[i - 2] ^= (g >> 16);
+            tmp[i - 1] ^= (g >> 8);
+            tmp[i] ^= g;
+        } /* for (size_t i = 4; i < tmp.size(); i++) */
+        for (size_t i = 0; i < 4; i++)
         {
             res[i] = std::bit_reverse(tmp.rbegin()[3 - i]);
             res[i] = ~res[i];
@@ -70,15 +79,15 @@ namespace ETHERNET
         return res;
     }
 
-    bool Ethernet_frame::verify()
+    bool Ethernet_frame::verify() const
     {
         return this->calculate_fcs() == fcs;
     }
-    std::vector<uint8_t> Ethernet_frame::get_data()
+    std::vector<uint8_t> Ethernet_frame::get_data() const
     {
         return data;
     }
-    uint16_t Ethernet_frame::get_type()
+    uint16_t Ethernet_frame::get_type() const
     {
         return ether_type;
     }
