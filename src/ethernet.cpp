@@ -26,7 +26,7 @@ namespace ETHERNET
 
     uint64_t Ethernet_frame::query_check_byte(uint8_t x) const
     {
-        static std::array<uint64_t, 256> mem{0};
+        static std::array<uint64_t, 256> mem{};
         static const uint64_t G = 0b100000100110000010001110110110111u; // NOTE: G has 33 bits!
         if (mem[x])
             return mem[x];
@@ -36,7 +36,7 @@ namespace ETHERNET
         for (size_t i = 7; i < 8; i--)
         {
             if (x >> i & 1) {
-                x ^= (G >> 32 << i);
+                x ^= (G << i >> 32);
                 mem[y] ^= (G << i);
             }
         }
@@ -81,7 +81,10 @@ namespace ETHERNET
 
     bool Ethernet_frame::verify() const
     {
-        return this->calculate_fcs() == fcs;
+        auto correct_fcs = this->calculate_fcs();
+        // std::cerr.setf(std::ios::hex, std::ios::basefield);
+        // std::cerr << "Ethernet frame: " << ((correct_fcs[0] << 24) | (correct_fcs[1] << 16) | (correct_fcs[2] << 8) | correct_fcs[3]) << std::endl;
+        return correct_fcs == fcs;
     }
     std::vector<uint8_t> Ethernet_frame::get_data() const
     {

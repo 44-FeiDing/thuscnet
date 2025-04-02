@@ -6,18 +6,16 @@
             "configuration" : {
                 "request": "launch",
                 "program": "build/thuscnet",
-                "externalConsole": true,
+                "externalConsole": true
             }
         }
-    }
+    },
     "Attach" : {
         "adapter" : "CodeLLDB",
         "filetypes" : [ "c", "cpp", "rust" ],
         "configuration" : {
             "request": "attach",
-            "program": "build/thuscnet",
-            "processId": "${input:processId}",
-            "externalConsole": true,
+            "program": "${workspaceRoot}/build/thuscnet"
         }
-    },
+    }
 }

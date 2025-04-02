@@ -1,8 +1,8 @@
-P10345 —— developing
+P10345
 
 # Compile
 
-```
-meson setup build
-meson build -C build
+```sh
+$ meson setup build
+$ meson build -C build
 ```
