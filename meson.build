@@ -1,5 +1,5 @@
 project('thuscnet', 'cpp',
-  version : '2.0',)
+  version : '3.0-rc',)
 
 thuscnet_inc = include_directories('include')
 
@@ -8,6 +8,7 @@ executable('thuscnet',
            'src/pcap.cpp',
            'src/ethernet.cpp',
            'src/ip.cpp',
+           'src/arp.cpp',
            'src/main.cpp',
            include_directories : [ thuscnet_inc ],
            install : true)

@@ -5,7 +5,7 @@
 #include <vector>
 using std::istream;
 using std::ostream;
-namespace PCAP
+namespace FEIDING
 {
     class Pcap_hdr
     {

@@ -9,7 +9,7 @@
 using std::istream;
 using std::ostream;
 
-namespace PCAP {
+namespace FEIDING {
 
     istream & operator>>(istream & in, Pcap_hdr & data)
     {

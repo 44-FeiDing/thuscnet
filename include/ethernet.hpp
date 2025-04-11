@@ -3,7 +3,7 @@
 #include <array>
 #include <cstdint>
 #include <vector>
-namespace ETHERNET {
+namespace FEIDING {
     class Ethernet_frame
     {
         private:
@@ -14,6 +14,7 @@ namespace ETHERNET {
             std::array<uint8_t, 4> fcs;
         public:
             Ethernet_frame(const std::vector<uint8_t> &);
+            Ethernet_frame(const std::array<uint8_t, 6> &, const std::array<uint8_t, 6> &, const uint16_t &, const std::vector<uint8_t> &);
             uint64_t query_check_byte(uint8_t) const;
             std::array<uint8_t, 4> calculate_fcs() const;
             bool verify() const;

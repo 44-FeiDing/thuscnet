@@ -3,11 +3,10 @@
 #include <array>
 #include <cstddef>
 #include <cstdint>
-#include <iostream>
 #include <netinet/in.h>
 #include <vector>
 
-namespace ETHERNET
+namespace FEIDING
 {
     Ethernet_frame::Ethernet_frame(const std::vector<uint8_t> & src):
         dest_mac{src[0], src[1], src[2], src[3], src[4], src[5]},
@@ -18,10 +17,17 @@ namespace ETHERNET
     {
         if (src.size() < 64)
         {
-            std::cerr << "Fuck you." << std::endl;
-            std::cerr << "Source data too small when construct ethernet ";
             return;
         }
+    }
+
+    Ethernet_frame::Ethernet_frame(const std::array<uint8_t, 6> &a, const std::array<uint8_t, 6> &b, const uint16_t &c, const std::vector<uint8_t> &d):
+        dest_mac(a),
+        src_mac(b),
+        ether_type(c),
+        data(d)
+    {
+        fcs = calculate_fcs();
     }
 
     uint64_t Ethernet_frame::query_check_byte(uint8_t x) const
@@ -82,8 +88,6 @@ namespace ETHERNET
     bool Ethernet_frame::verify() const
     {
         auto correct_fcs = this->calculate_fcs();
-        // std::cerr.setf(std::ios::hex, std::ios::basefield);
-        // std::cerr << "Ethernet frame: " << ((correct_fcs[0] << 24) | (correct_fcs[1] << 16) | (correct_fcs[2] << 8) | correct_fcs[3]) << std::endl;
         return correct_fcs == fcs;
     }
     std::vector<uint8_t> Ethernet_frame::get_data() const
