@@ -20,6 +20,7 @@ namespace FEIDING {
             bool verify() const;
             std::vector<uint8_t> get_data() const;
             uint16_t get_type() const;
+            std::vector<uint8_t> get_original_data() const;
     };
 }
 #endif

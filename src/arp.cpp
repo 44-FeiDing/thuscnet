@@ -37,9 +37,10 @@ namespace FEIDING
             res.push_back(i);
         return Arp(res);
     }
-    std::array<uint8_t, 6> Arp::get_dest_mac() const { return dest_mac; }
-    std::array<uint8_t, 6> Arp::get_src_mac() const { return src_mac; }
-    std::vector<uint8_t> Arp::get_data() const 
+    bool Arp::get_type() const { return op; }
+    const std::array<uint8_t, 4> & Arp::get_dest_ip() const { return dest_ip; }
+    const std::array<uint8_t, 6> & Arp::get_src_mac() const { return src_mac; }
+    const std::vector<uint8_t> Arp::get_original_data() const 
     {
         std::vector<uint8_t> res;
         res.push_back(hw_type >> 8);

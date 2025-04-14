@@ -42,9 +42,10 @@ namespace FEIDING
         public:
             Arp(const std::vector <uint8_t> &);
             Arp answer() const;
-            std::array<uint8_t, 6> get_dest_mac() const;
-            std::array<uint8_t, 6> get_src_mac() const;
-            std::vector<uint8_t> get_data() const;
+            bool get_type() const;
+            const std::array<uint8_t, 4> & get_dest_ip() const;
+            const std::array<uint8_t, 6> & get_src_mac() const;
+            const std::vector<uint8_t> get_original_data() const;
     };
 }
 #endif

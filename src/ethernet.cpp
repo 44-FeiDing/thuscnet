@@ -76,7 +76,7 @@ namespace FEIDING
             tmp[i - 2] ^= (g >> 16);
             tmp[i - 1] ^= (g >> 8);
             tmp[i] ^= g;
-        } /* for (size_t i = 4; i < tmp.size(); i++) */
+        }
         for (size_t i = 0; i < 4; i++)
         {
             res[i] = std::bit_reverse(tmp.rbegin()[3 - i]);
@@ -97,5 +97,16 @@ namespace FEIDING
     uint16_t Ethernet_frame::get_type() const
     {
         return ether_type;
+    }
+    std::vector<uint8_t> Ethernet_frame::get_original_data() const
+    {
+        std::vector<uint8_t> res;
+        res.insert(res.end(), dest_mac.begin(), dest_mac.end());
+        res.insert(res.end(), src_mac.begin(), src_mac.end());
+        res.push_back(ether_type >> 8);
+        res.push_back(ether_type & 0xff);
+        res.insert(res.end(), data.begin(), data.end());
+        res.insert(res.end(), fcs.begin(), fcs.end());
+        return res;
     }
 }

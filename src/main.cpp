@@ -1,32 +1,21 @@
-#include "pcap.hpp"
+#include "arp.hpp"
 #include "ethernet.hpp"
-#include "ip.hpp"
+#include "pcap.hpp"
 #include <iostream>
-
+#include <vector>
 int main()
 {
-    using namespace std;
-    using namespace FEIDING;
-    Pcap data;
-    cin >> data;
-    auto recs = data.get_data();
-    for (auto &i : recs) {
-        Ethernet_frame frame(i);
-        if (frame.verify())
-        {
-            if (frame.get_type() == 0x0800)
+    FEIDING::Pcap pcap;
+    std::vector<std::vector<uint8_t>> res;
+    std::cin >> pcap;
+    for (const auto &i : pcap.get_data()) {
+        FEIDING::Ethernet_frame frame(i);
+        if (frame.get_type() == 0x0806 && frame.verify()) {
+            FEIDING::Arp arp(frame.get_data());
+            if (arp.get_type() == 1)
             {
-                Ipgroup_hdr ipgroup(frame.get_data());
-                if (ipgroup.verify())
-                    cout << "Yes" << endl;
-                else
-                    cout << "No" << endl;
+                res.push_back(FEIDING::Ethernet_frame(arp.get_src_mac(), (*FEIDING::arp_table.find(arp.get_dest_ip())).second, 2, arp.get_original_data()).get_original_data());
             }
-            else
-                cout << "Yes" << endl;
         }
-        else
-            cout << "No" << endl;
     }
-    return 0;
 }

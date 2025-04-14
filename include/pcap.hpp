@@ -19,6 +19,7 @@ namespace FEIDING
         uint32_t snaplen;// 允许的最大包长度，始终为 262144
         uint32_t network;// 数据类型，本次学习题中始终为 1 （以太网）
     public:
+        Pcap_hdr();
         friend istream & operator>>(istream & in, Pcap_hdr & data);
         friend ostream & operator<<(ostream & out, Pcap_hdr data);
     }__attribute__ ((packed));
@@ -44,6 +45,7 @@ namespace FEIDING
         Pcaprec_hdr header;
         std::vector<uint8_t> data;
     public:
+        Pcaprec(const std::vector<uint8_t> &);
         std::vector<uint8_t>  get_data() const {return data;}
         uint32_t lenth() const;
         friend istream & operator>>(istream & in, Pcaprec & data);
@@ -56,6 +58,8 @@ namespace FEIDING
         Pcap_hdr header;
         std::vector<Pcaprec> data;
     public:
+        Pcap();
+        Pcap(const std::vector<std::vector<uint8_t>> &);
         std::vector<std::vector<uint8_t>> get_data() const;
         friend istream & operator>>(istream & in, Pcap & data);
         friend ostream & operator<<(ostream & out, const Pcap & data);

@@ -9,7 +9,17 @@
 using std::istream;
 using std::ostream;
 
-namespace FEIDING {
+namespace FEIDING
+{
+    Pcap_hdr::Pcap_hdr():
+        magic_number(0xA1B2C3D4),
+        version_major(2),
+        version_minor(4),
+        thiszone(0),
+        sigfigs(0),
+        snaplen(262144),
+        network(1)
+    {}
 
     istream & operator>>(istream & in, Pcap_hdr & data)
     {
@@ -62,6 +72,8 @@ namespace FEIDING {
         return out;
     }
 
+    Pcaprec::Pcaprec()// to be continue
+
     uint32_t Pcaprec::lenth() const
     {
         return header.lenth();
@@ -103,6 +115,17 @@ namespace FEIDING {
         }
         data.data.pop_back();
         return in;
+    }
+
+    Pcap::Pcap()
+    {}
+
+    Pcap::Pcap(const std::vector<std::vector<uint8_t>> & src):
+        header()
+    {
+        for (const auto &i : src) {
+            data.push_back(Pcaprec(i));
+        }
     }
 
     ostream & operator<<(ostream & out, const Pcap & data)
