@@ -9,3 +9,4 @@ test/
 final.cpp
 final
 *.swo
+builddir/
