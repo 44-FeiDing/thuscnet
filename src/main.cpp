@@ -1,13 +1,20 @@
 #include "arp.hpp"
 #include "ethernet.hpp"
 #include "pcap.hpp"
+#include <fstream>
 #include <iostream>
 #include <vector>
+
+using std::cin;
+using std::cout;
+
+std::ifstream fin("test/1.in");
+std::ofstream fout("test/1.out");
 int main()
 {
     FEIDING::Pcap pcap;
     std::vector<std::vector<uint8_t>> res;
-    std::cin >> pcap;
+    cin >> pcap;
     for (const auto &i : pcap.get_data())
     {
         FEIDING::Ethernet_frame frame(i);
@@ -19,11 +26,11 @@ int main()
                 res.push_back(
                     FEIDING::Ethernet_frame(
                         arp.get_src_mac(),
-                        (*FEIDING::arp_table.find(arp.get_dest_ip())).second, 2,
-                        arp.get_original_data())
+                        (*FEIDING::arp_table.find(arp.get_dest_ip())).second,
+                        0x0806, arp.answer().get_original_data())
                         .get_original_data());
             }
         }
     }
-    std::cout << FEIDING::Pcap(res);
+    cout << FEIDING::Pcap(res);
 }

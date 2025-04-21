@@ -26,9 +26,9 @@ Ethernet_frame::Ethernet_frame(const std::array<uint8_t, 6> &a,
                                const uint16_t &c, const std::vector<uint8_t> &d)
     : dest_mac(a), src_mac(b), ether_type(c), data(d)
 {
-    if (data.size() < 64)
+    if (data.size() < 46)
     {
-        data.resize(0);
+        data.resize(46);
     }
     fcs = calculate_fcs();
 }
