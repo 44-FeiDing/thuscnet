@@ -35,7 +35,7 @@ Arp Arp::answer() const
         res.push_back(i);
     return Arp(res);
 }
-bool Arp::get_type() const
+uint16_t Arp::get_type() const
 {
     return op;
 }

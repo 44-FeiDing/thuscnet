@@ -1,5 +1,5 @@
 project('thuscnet', 'cpp',
-  version : '3.0-rc',)
+  version : '3.0', default_options: ['cpp_std=c++20'])
 
 thuscnet_inc = include_directories('include')
 
