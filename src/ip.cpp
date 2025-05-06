@@ -6,12 +6,9 @@
 namespace FEIDING
 {
 Ipgroup_hdr::Ipgroup_hdr(std::vector<uint8_t> src)
-    : version(0b0100), ihl(src[0] & 0xfu), type(src[1]),
-      tot_length((src[2] << 8) + src[3]),
-      identification((src[4] << 8) + src[5]), flag(0b010),
-      offset((src[6] & 0xbbbbbu << 8) + src[7]), ttl(src[8]), protocal(src[9]),
-      checksum((src[10] << 8) + src[11]),
-      src_ip{src[12], src[13], src[14], src[15]},
+    : version(0b0100), ihl(src[0] & 0xfu), type(src[1]), tot_length((src[2] << 8) + src[3]),
+      identification((src[4] << 8) + src[5]), flag(0b010), offset((src[6] & 0xbbbbbu << 8) + src[7]), ttl(src[8]),
+      protocal(src[9]), checksum((src[10] << 8) + src[11]), src_ip{src[12], src[13], src[14], src[15]},
       dest_ip{src[16], src[17], src[18], src[19]}
 {
     if (ihl > 5)
@@ -69,5 +66,13 @@ uint16_t Ipgroup_hdr::calculate_checksum()
 bool Ipgroup_hdr::verify()
 {
     return calculate_checksum() == checksum;
+}
+Ip::Ip(const std::vector<uint8_t> &src) : header(src)
+{
+    payload.resize(header.get_tot_length() - header.get_ihl() * 4);
+    for (size_t i = 0; i < payload.size(); ++i)
+    {
+        payload[i] = src[header.get_ihl() * 4 + i];
+    }
 }
 } // namespace FEIDING

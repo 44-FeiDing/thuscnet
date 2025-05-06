@@ -1,31 +1,31 @@
-#include "arp.hpp"
 #include "ethernet.hpp"
+#include "icmp.hpp"
+#include "ip.hpp"
 #include "pcap.hpp"
-#include <iostream>
-#include <vector>
+#include "utilities.hpp"
+#include <fstream>
+std::ifstream fin("test/1.in");
+std::ofstream fout("test/1.out");
 
 int main()
 {
-    FEIDING::Pcap pcap;
-    std::vector<std::vector<uint8_t>> res;
-    std::cin >> pcap;
-    for (const auto &i : pcap.get_data())
+    FEIDING::Pcap pcap, res;
+    fin >> pcap;
+    auto data = pcap.get_data();
+    for (const auto &i : data)
     {
-        FEIDING::Ethernet_frame frame(i);
-        if (frame.get_type() == 0x0806 && frame.verify())
+        FEIDING::Ethernet_frame ethernet(i);
+        if (!ethernet.verify() || ethernet.get_type() != 0x0800)
         {
-            FEIDING::Arp arp(frame.get_data());
-            if (arp.get_type() == 1 &&
-                FEIDING::arp_table.contains(arp.get_dest_ip()))
-            {
-                res.push_back(
-                    FEIDING::Ethernet_frame(
-                        arp.get_src_mac(),
-                        (*FEIDING::arp_table.find(arp.get_dest_ip())).second,
-                        0x0806, arp.answer().get_original_data())
-                        .get_original_data());
-            }
+            continue;
         }
+        FEIDING::Ip ip(ethernet.get_data());
+        if (!ip.verify() || std::is_in_a_same_subnet(ip.get_src_and_dst_ip().first, ip.get_src_and_dst_ip().second))
+        {
+            continue;
+        }
+        FEIDING::Icmp icmp(ip.get_data());
+        icmp = icmp.construct_reply();
+        ip res()
     }
-    std::cout << FEIDING::Pcap(res);
 }

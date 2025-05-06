@@ -3,6 +3,7 @@
 
 #include <array>
 #include <cstdint>
+#include <utility>
 #include <vector>
 
 namespace FEIDING
@@ -27,6 +28,39 @@ class Ipgroup_hdr
     Ipgroup_hdr(std::vector<uint8_t>);
     uint16_t calculate_checksum();
     bool verify();
+    uint16_t get_tot_length() const
+    {
+        return tot_length;
+    }
+    uint8_t get_ihl() const
+    {
+        return ihl;
+    }
+    std::pair<std::array<uint8_t, 4>, std::array<uint8_t, 4>> get_src_and_dst_ip() const
+    {
+        return std::make_pair(src_ip, dest_ip);
+    }
+};
+class Ip
+{
+  private:
+    Ipgroup_hdr header;
+    std::vector<uint8_t> payload;
+
+  public:
+    Ip(const std::vector<uint8_t> &);
+    bool verify()
+    {
+        return header.verify();
+    }
+    std::vector<uint8_t> get_data() const
+    {
+        return payload;
+    }
+    std::pair<std::array<uint8_t, 4>, std::array<uint8_t, 4>> get_src_and_dst_ip() const
+    {
+        return header.get_src_and_dst_ip();
+    }
 };
 } // namespace FEIDING
 

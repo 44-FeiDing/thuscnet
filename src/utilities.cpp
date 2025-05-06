@@ -18,3 +18,7 @@ template <typename T> uint32_t std::convert_to_uint32(const T &a)
     }
     return res;
 }
+bool std::is_in_a_same_subnet(const std::array<uint8_t, 4> &ip1, const std::array<uint8_t, 4> &ip2)
+{
+    return (ip1[0] == ip2[0]) && (ip1[1] == ip2[1]) && (ip1[2] == ip2[2]);
+}
