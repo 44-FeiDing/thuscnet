@@ -1,6 +1,5 @@
 #ifndef PCAP_HPP_
 #define PCAP_HPP_
-#include <array>
 #include <cstdint>
 #include <iostream>
 #include <vector>
@@ -10,7 +9,7 @@ namespace FEIDING
 {
 class Pcap_hdr
 {
-  private:
+  public:
     // 所有字段都是大端序
     uint32_t magic_number;  // 用于文件类型识别，始终为 0xA1B2C3D4，
     uint16_t version_major; // 始终为 2
@@ -27,10 +26,11 @@ class Pcap_hdr
 
 class Pcaprec_hdr
 {
-  private:
+  public:
     // 所有字段都是大端序
-    uint32_t tsec;     // 时间戳（秒）
-    uint32_t ts_usec;  // 时间戳（微秒）
+    uint32_t tsec;    // 时间戳（秒）
+    uint32_t ts_usec; // 时间戳（微秒）
+  public:
     uint32_t incl_len; // 该片段的存储长度
     uint32_t orig_len; // 该片段实际的长度
   public:
@@ -46,7 +46,7 @@ class Pcaprec_hdr
 
 class Pcaprec
 {
-  private:
+  public:
     Pcaprec_hdr header;
     std::vector<uint8_t> data;
 
@@ -66,7 +66,7 @@ class Pcaprec
 };
 class Pcap
 {
-  private:
+  public:
     Pcap_hdr header;
     std::vector<Pcaprec> data;
 
