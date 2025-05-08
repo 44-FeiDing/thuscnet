@@ -19,6 +19,7 @@ class Icmp
     Icmp(const std::vector<uint8_t> &);
     Icmp construct_reply() const;
     const std::vector<uint8_t> &get_data() const;
+    std::vector<uint8_t> get_origin_data() const;
 };
 } // namespace FEIDING
 

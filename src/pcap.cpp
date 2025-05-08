@@ -4,7 +4,6 @@
 #include <netinet/in.h>
 
 #include <cstdint>
-#include <cstring>
 #include <iostream>
 #include <ostream>
 #include <vector>
@@ -14,8 +13,7 @@ using std::ostream;
 namespace FEIDING
 {
 Pcap_hdr::Pcap_hdr()
-    : magic_number(0xA1B2C3D4), version_major(2), version_minor(4), thiszone(0),
-      sigfigs(0), snaplen(262144), network(1)
+    : magic_number(0xA1B2C3D4), version_major(2), version_minor(4), thiszone(0), sigfigs(0), snaplen(262144), network(1)
 {
 }
 
@@ -45,8 +43,7 @@ ostream &operator<<(ostream &out, Pcap_hdr data)
     return out;
 }
 
-Pcaprec_hdr::Pcaprec_hdr(unsigned lenth)
-    : tsec(0), ts_usec(0), incl_len(lenth), orig_len(lenth)
+Pcaprec_hdr::Pcaprec_hdr(unsigned lenth) : tsec(0), ts_usec(0), incl_len(lenth), orig_len(lenth)
 {
 }
 
@@ -75,8 +72,7 @@ ostream &operator<<(ostream &out, Pcaprec_hdr data)
     return out;
 }
 
-Pcaprec::Pcaprec(const std::vector<uint8_t> &src)
-    : header(src.size()), data(src)
+Pcaprec::Pcaprec(const std::vector<uint8_t> &src) : header(src.size()), data(src)
 {
 }
 
@@ -123,8 +119,7 @@ istream &operator>>(istream &in, Pcap &data)
     return in;
 }
 
-Pcap::Pcap(
-    const std::vector<std::vector<uint8_t>> &src) // vector of Ethernet_frame
+Pcap::Pcap(const std::vector<std::vector<uint8_t>> &src) // vector of Ethernet_frame
     : header()
 {
     for (const auto &i : src)

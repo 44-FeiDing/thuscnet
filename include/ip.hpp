@@ -2,6 +2,7 @@
 #define IP_HPP_
 
 #include <array>
+#include <cstddef>
 #include <cstdint>
 #include <utility>
 #include <vector>
@@ -26,8 +27,10 @@ class Ipgroup_hdr
 
   public:
     Ipgroup_hdr(std::vector<uint8_t>);
+    Ipgroup_hdr(const std::array<uint8_t, 4> &, const std::array<uint8_t, 4> &, const size_t &);
     uint16_t calculate_checksum();
     bool verify();
+    std::vector<uint8_t> get_origin_data() const;
     uint16_t get_tot_length() const
     {
         return tot_length;
@@ -49,6 +52,13 @@ class Ip
 
   public:
     Ip(const std::vector<uint8_t> &);
+    std::vector<uint8_t> get_origin_data() const;
+    Ip(const std::array<uint8_t, 4> &src_ip, const std::array<uint8_t, 4> &dest_ip, const size_t length,
+       const std::vector<uint8_t> &src_payload)
+        : header(src_ip, dest_ip, length), payload(src_payload)
+    {
+        payload.resize(length - header.get_ihl() * 4);
+    }
     bool verify()
     {
         return header.verify();

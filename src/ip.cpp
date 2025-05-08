@@ -1,4 +1,5 @@
 #include "ip.hpp"
+#include <cstddef>
 #include <cstdint>
 #include <netinet/in.h>
 #include <vector>
@@ -24,6 +25,17 @@ Ipgroup_hdr::Ipgroup_hdr(std::vector<uint8_t> src)
         options.resize(0);
     }
 }
+
+Ipgroup_hdr::Ipgroup_hdr(const std::array<uint8_t, 4> &src_ip, const std::array<uint8_t, 4> &dest_ip,
+                         const size_t &length)
+
+    : version(0b0100), ihl(5), type(0), tot_length(length), identification(0), flag(0b010), offset(0), ttl(64),
+      protocal(0x01), src_ip(src_ip), dest_ip(dest_ip)
+{
+    options.resize(0);
+    checksum = calculate_checksum();
+}
+
 uint16_t Ipgroup_hdr::calculate_checksum()
 {
     std::vector<uint16_t> src;
@@ -67,6 +79,29 @@ bool Ipgroup_hdr::verify()
 {
     return calculate_checksum() == checksum;
 }
+std::vector<uint8_t> Ipgroup_hdr::get_origin_data() const
+{
+    std::vector<uint8_t> res;
+    res.push_back(version << 4 | ihl);
+    res.push_back(type);
+    res.push_back(tot_length >> 8);
+    res.push_back(tot_length & 0xff);
+    res.push_back(identification >> 8);
+    res.push_back(identification & 0xff);
+    res.push_back((flag << 5) + (offset >> 8));
+    res.push_back(offset & 0xff);
+    res.push_back(ttl);
+    res.push_back(protocal);
+    res.push_back(checksum >> 8);
+    res.push_back(checksum & 0xff);
+    for (const auto &i : src_ip)
+        res.push_back(i);
+    for (const auto &i : dest_ip)
+        res.push_back(i);
+    for (const auto &i : options)
+        res.push_back(i);
+    return res;
+}
 Ip::Ip(const std::vector<uint8_t> &src) : header(src)
 {
     payload.resize(header.get_tot_length() - header.get_ihl() * 4);
@@ -74,5 +109,11 @@ Ip::Ip(const std::vector<uint8_t> &src) : header(src)
     {
         payload[i] = src[header.get_ihl() * 4 + i];
     }
+}
+std::vector<uint8_t> Ip::get_origin_data() const
+{
+    std::vector<uint8_t> res = header.get_origin_data();
+    res.insert(res.end(), payload.begin(), payload.end());
+    return res;
 }
 } // namespace FEIDING
