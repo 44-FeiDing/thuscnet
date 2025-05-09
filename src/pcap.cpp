@@ -6,6 +6,7 @@
 #include <cstdint>
 #include <iostream>
 #include <ostream>
+#include <utility>
 #include <vector>
 using std::istream;
 using std::ostream;
@@ -43,7 +44,8 @@ ostream &operator<<(ostream &out, Pcap_hdr data)
     return out;
 }
 
-Pcaprec_hdr::Pcaprec_hdr(unsigned lenth) : tsec(0), ts_usec(0), incl_len(lenth), orig_len(lenth)
+Pcaprec_hdr::Pcaprec_hdr(unsigned lenth, const uint32_t &src_tsec = 0, const uint32_t &src_usec = 0)
+    : tsec(src_tsec), ts_usec(src_usec), incl_len(lenth), orig_len(lenth)
 {
 }
 
@@ -72,7 +74,8 @@ ostream &operator<<(ostream &out, Pcaprec_hdr data)
     return out;
 }
 
-Pcaprec::Pcaprec(const std::vector<uint8_t> &src) : header(src.size()), data(src)
+Pcaprec::Pcaprec(const std::vector<uint8_t> &src, const std::pair<uint32_t, uint32_t> &time = std::make_pair(0, 0))
+    : header(src.size(), time.first, time.second), data(src)
 {
 }
 
@@ -119,12 +122,21 @@ istream &operator>>(istream &in, Pcap &data)
     return in;
 }
 
-Pcap::Pcap(const std::vector<std::vector<uint8_t>> &src) // vector of Ethernet_frame
+Pcap::Pcap(const std::vector<std::vector<uint8_t>> &src,
+           const std::vector<std::pair<uint32_t, uint32_t>> &time) // vector of Ethernet_frame
     : header()
 {
+    const bool flag = time.size() == src.size();
+    auto it = time.begin();
     for (const auto &i : src)
     {
-        data.push_back(Pcaprec(i));
+        if (!flag)
+            data.push_back(Pcaprec(i));
+        else
+        {
+            data.push_back(Pcaprec(i, *it));
+            it++;
+        }
     }
 }
 
@@ -146,5 +158,15 @@ uint64_t Pcaprec_hdr::time() const
 bool operator<(const Pcaprec a, const Pcaprec b)
 {
     return a.header.time() < b.header.time();
+}
+
+std::vector<std::pair<uint32_t, uint32_t>> Pcap::get_time() const
+{
+    std::vector<std::pair<uint32_t, uint32_t>> res;
+    for (auto &i : data)
+    {
+        res.push_back(i.get_time());
+    }
+    return res;
 }
 } // namespace FEIDING

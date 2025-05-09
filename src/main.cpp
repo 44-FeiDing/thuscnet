@@ -1,11 +1,14 @@
+#include "arp.hpp"
 #include "ethernet.hpp"
 #include "icmp.hpp"
 #include "ip.hpp"
 #include "pcap.hpp"
 #include "utilities.hpp"
-#include <cstddef>
+#include <algorithm>
+#include <cstdint>
 #include <fstream>
 #include <sys/types.h>
+#include <utility>
 #include <vector>
 std::ifstream fin("test/2.in");
 std::ofstream fout("test/2.out");
@@ -14,9 +17,21 @@ int main()
 {
     FEIDING::Pcap pcap;
     std::vector<std::vector<uint8_t>> res;
-    std::vector<bool> replied(false);
     fin >> pcap;
+    std::vector<std::pair<uint32_t, uint32_t>> time(pcap.get_time());
+    std::vector<bool> replied;
     auto data = pcap.get_data();
+
+    for (auto &i : time)
+    {
+        i.second++;
+        if (i.second == 1000000)
+        {
+            i.first++;
+            i.second = 0;
+        }
+    }
+
     for (const auto &i : data)
     {
         FEIDING::Ethernet_frame ethernet(i);
@@ -26,7 +41,11 @@ int main()
             continue;
         }
         FEIDING::Ip ip(ethernet.get_data());
-        if (!ip.verify() || !std::is_in_a_same_subnet(ip.get_src_and_dst_ip().first, ip.get_src_and_dst_ip().second))
+        if (!ip.verify() || !std::is_in_a_same_subnet(ip.get_src_and_dst_ip().first, ip.get_src_and_dst_ip().second) ||
+            ip.get_protocol() != 1 || FEIDING::arp_table.contains(ip.get_src_and_dst_ip().second) ||
+            std::find_if(FEIDING::arp_table.begin(), FEIDING::arp_table.end(), [](const auto &pair) {
+                return pair.second == ethernet.get_dest_mac();
+            }) != map.end()) // TODO: check whether I have the ip and mac address.
         {
             replied.push_back(0);
             continue;
@@ -40,23 +59,16 @@ int main()
                           .get_original_data());
         replied.push_back(1);
     }
-    FEIDING::Pcap res_pcap(res);
-    size_t j = 0, k = 0;
-    for (const auto &i : pcap.data)
+    auto it = time.begin();
+    for (const auto &i : replied)
     {
-        if (!replied[j])
+        if (!i)
         {
-            j++;
-            continue;
+            const auto tmp = it - 1;
+            time.erase(it);
+            it = tmp;
         }
-        res_pcap.data[k].header.tsec = i.header.tsec;
-        res_pcap.data[k].header.ts_usec = i.header.ts_usec + 1;
-        if (res_pcap.data[k].header.ts_usec >= 1000000)
-        {
-            res_pcap.data[k].header.tsec++;
-            res_pcap.data[k].header.ts_usec = 0;
-        }
-        k++;
+        it++;
     }
-    fout << res_pcap;
+    fout << FEIDING::Pcap(res, time);
 }

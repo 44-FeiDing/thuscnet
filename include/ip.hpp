@@ -31,6 +31,10 @@ class Ipgroup_hdr
     uint16_t calculate_checksum();
     bool verify();
     std::vector<uint8_t> get_origin_data() const;
+    uint8_t get_protocol() const
+    {
+        return protocal;
+    }
     uint16_t get_tot_length() const
     {
         return tot_length;
@@ -58,6 +62,14 @@ class Ip
         : header(src_ip, dest_ip, length), payload(src_payload)
     {
         payload.resize(length - header.get_ihl() * 4);
+    }
+    uint16_t calculate_checksum()
+    {
+        return header.calculate_checksum();
+    }
+    uint8_t get_protocol() const
+    {
+        return header.get_protocol();
     }
     bool verify()
     {
